@@ -150,7 +150,7 @@ colcon build
 source install/setup.bash
 ```
 
-## Step 6 — Create a simple Python node (outline)
+## Step 6 — Create a simple Python node (publisher)
 
 Create a minimal `ament_python` package inside `src/` and build with `colcon`.
 
@@ -160,63 +160,156 @@ High-level steps:
 
 ```bash
 cd ~/ros2_ws/src
-ros2 pkg create --build-type ament_python my_py_pkg --dependencies rclpy
+ros2 pkg create --build-type ament_python --license Apache-2.0 py_pub
 ```
 
-2. Implement a minimal node in `my_py_pkg/my_py_pkg/simple_node.py` (template):
+2. Implement a minimal node in `py_pub/py_pub/publisher_member_function.py` (template):
 
 ```python
 import rclpy
 from rclpy.node import Node
 
-class MinimalNode(Node):
-        def __init__(self):
-                super().__init__('minimal_node')
-                self.get_logger().info('Minimal node started')
+from std_msgs.msg import String
 
-def main():
-        rclpy.init()
-        node = MinimalNode()
-        rclpy.spin(node)
-        node.destroy_node()
-        rclpy.shutdown()
+
+class MinimalPublisher(Node):
+
+    def __init__(self):
+        super().__init__('minimal_publisher')
+        self.publisher_ = self.create_publisher(String, 'topic', 10)
+        timer_period = 0.5  # seconds
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.i = 0
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = 'Hello World: %d' % self.i
+        self.publisher_.publish(msg)
+        self.get_logger().info('Publishing: "%s"' % msg.data)
+        self.i += 1
+
+
+def main(args=None):
+    rclpy.init(args=args)
+
+    minimal_publisher = MinimalPublisher()
+
+    rclpy.spin(minimal_publisher)
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    minimal_publisher.destroy_node()
+    rclpy.shutdown()
+
 
 if __name__ == '__main__':
-        main()
+    main()
 ```
 
-3. Build and source the workspace:
+3. Verify all dependecies inside the package.xml:
+
+```xml
+<description>Examples of minimal publisher/subscriber using rclpy</description>
+<maintainer email="you@email.com">Your Name</maintainer>
+<license>Apache License 2.0</license>
+
+<exec_depend>rclpy</exec_depend>
+<exec_depend>std_msgs</exec_depend>
+```
+
+4. Add an entry point with the setup.py file:
+
+```python
+entry_points={
+        'console_scripts': [
+                'talker = py_pubsub.publisher_member_function:main',
+        ],
+},
+```
+
+5. Build and source the workspace:
 
 ```bash
 cd ~/ros2_ws
-colcon build --packages-select my_py_pkg
+colcon build --symlink-install --packages-select py_pub
 source install/setup.bash
-ros2 run my_py_pkg minimal_node
+ros2 run py_pub talker
 ```
 
 This runs your Python node and you should see the logger message printed.
 
-## Step 7 — Create a simple C++ node (outline)
+## Step 7 — Create a simple C++ node (subscribe)
 
-Use `ros2 pkg create --build-type ament_cmake` to scaffold a C++ package, add a small publisher/subscriber, then build with `colcon`.
+Use `ros2 pkg create --build-type ament_cmake` to scaffold a C++ package, add a small subscriber, then build with `colcon`.
 
 High-level steps:
 
+1. From your workspace root:
+
 ```bash
 cd ~/ros2_ws/src
-ros2 pkg create --build-type ament_cmake my_cpp_pkg --dependencies rclcpp
+ros2 pkg create --build-type ament_cmake --license Apache-2.0 cpp_pubsub
 ```
 
-Implement a small publisher in `src/` and add the executable in `CMakeLists.txt`. Then:
+2. Implement a minimal node in `cpp_sub/src/subscriber_member_function.cpp` (template):
+
+```cpp
+#include <memory>
+
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+using std::placeholders::_1;
+
+class MinimalSubscriber : public rclcpp::Node
+{
+  public:
+    MinimalSubscriber()
+    : Node("minimal_subscriber")
+    {
+      subscription_ = this->create_subscription<std_msgs::msg::String>(
+      "topic", 10, std::bind(&MinimalSubscriber::topic_callback, this, _1));
+    }
+
+  private:
+    void topic_callback(const std_msgs::msg::String & msg) const
+    {
+      RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg.data.c_str());
+    }
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+};
+
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<MinimalSubscriber>());
+  rclcpp::shutdown();
+  return 0;
+}
+```
+
+3. Complete the CMakeLists.txt file:
+
+```CMake
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+
+add_executable(listener src/subscriber_member_function.cpp)
+ament_target_dependencies(listener rclcpp std_msgs)
+
+install(TARGETS
+  listener
+  DESTINATION lib/${PROJECT_NAME})
+```
+
+4. Build and source the workspace:
 
 ```bash
 cd ~/ros2_ws
-colcon build --packages-select my_cpp_pkg
+colcon build --packages-select cpp_pubsub
 source install/setup.bash
-ros2 run my_cpp_pkg <executable_name>
+ros2 run cpp_sub listener
 ```
-
-See the ROS 2 tutorials for exact example source files and `CMakeLists.txt` content.
 
 ## Step 8 — Topic performance and inspection
 
@@ -226,6 +319,14 @@ See the ROS 2 tutorials for exact example source files and `CMakeLists.txt` cont
     - `ros2 topic bw /topic_name`
 
 These are handy to validate message rates and approximate throughput.
+
+Since the publishig node works with a timer_callback you can change the frequnecy of publising with:
+
+```python
+timer_period = 0.5  # seconds
+```
+
+And measure again the publishing frequency.
 
 ## Troubleshooting & tips
 
