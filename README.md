@@ -223,7 +223,7 @@ if __name__ == '__main__':
 ```python
 entry_points={
         'console_scripts': [
-                'talker = py_pubsub.publisher_member_function:main',
+                'talker = py_pub.publisher_member_function:main',
         ],
 },
 ```
@@ -249,7 +249,7 @@ High-level steps:
 
 ```bash
 cd ~/ros2_ws/src
-ros2 pkg create --build-type ament_cmake --license Apache-2.0 cpp_pubsub
+ros2 pkg create --build-type ament_cmake --license Apache-2.0 cpp_sub
 ```
 
 2. Implement a minimal node in `cpp_sub/src/subscriber_member_function.cpp` (template):
@@ -306,7 +306,7 @@ install(TARGETS
 
 ```bash
 cd ~/ros2_ws
-colcon build --packages-select cpp_pubsub
+colcon build --packages-select cpp_sub
 source install/setup.bash
 ros2 run cpp_sub listener
 ```
