@@ -9,6 +9,7 @@
   
   locale  # verify settings
   ```
+
 2. Install ROS 2 Humble (high level)
   ```bash
   sudo apt install software-properties-common
@@ -21,4 +22,20 @@
   
   sudo apt update && apt upgrade -y
   sudo apt install ros-humble-desktop ros-dev-tools
+  ```
+
+3. Install colcon (build tool)
+  `colcon` is the standard build tool used to build ROS 2 workspace packages.
+  
+  ```bash
+  sudo apt install -y python3-colcon-common-extensions
+  ```
+  
+  Create a workspace layout (if you don't have one yet):
+  
+  ```bash
+  mkdir -p ~/ros2_ws/src
+  cd ~/ros2_ws
+  colcon build
+  source install/setup.bash
   ```
