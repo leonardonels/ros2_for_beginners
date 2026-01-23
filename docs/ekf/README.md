@@ -1,18 +1,28 @@
 # mmr_ekf_odometry
 
 1. Download [common messages](https://github.com/MMR-Electric-Driverless/common_msgs)
-2. build common_msgs
+   ```bash
+   mkdir -p ~/ros2_ws/src
+   cd ~/ros2_ws/src
+   git clone https://github.com/MMR-Electric-Driverless/common_msgs
+   ```
+2. Build common_msgs
    ``` bash
+   cd ~/ros2_ws
    colcon build --packages-select common_msgs
    ```
 3. Source common mesages
    ```bash
    source install/setup.bash
    ```
+4. Download [mmr_ekf_odometry](https://github.com/leonardonels/mmr_ekf_odometry.git)
+   ```bash
+   cd ~/ros2_ws/src
+   git clone https://github.com/leonardonels/mmr_ekf_odometry.git
+   ```
+5. Build mmr_ekf_odometry
 
-1. install [mmr_ekf_odometry](https://github.com/leonardonels/mmr_ekf_odometry.git)
-
-2. this time the bag is only one and can be downloaded from [google-drive](soon_tm) or [nextcloud.leonardonels](https://nextcloud.leonardonels.com/s/wPgrT9xLMYcKeWG)
+6. Download the bag to test it from [google-drive](soon_tm) or [nextcloud.leonardonels](https://nextcloud.leonardonels.com/s/wPgrT9xLMYcKeWG)
 
 ## notes:
 ignore any reference to gazebo or simulation files since they are ment for a gazebo simulator
