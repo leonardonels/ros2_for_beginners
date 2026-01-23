@@ -1,5 +1,15 @@
 # mmr_ekf_odometry
 
+1. Download [common messages](https://github.com/MMR-Electric-Driverless/common_msgs)
+2. build common_msgs
+   ``` bash
+   colcon build --packages-select common_msgs
+   ```
+3. Source common mesages
+   ```bash
+   source install/setup.bash
+   ```
+
 1. install [mmr_ekf_odometry](https://github.com/leonardonels/mmr_ekf_odometry.git)
 
 2. this time the bag is only one and can be downloaded from [google-drive](soon_tm) or [nextcloud.leonardonels](https://nextcloud.leonardonels.com/s/wPgrT9xLMYcKeWG)
