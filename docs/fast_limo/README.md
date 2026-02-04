@@ -15,6 +15,9 @@
 4. test the influence of `estimate_extrinsics=True` in fast_limo->config
 
 ## notes:
+- **ADD THE RIGHT PATH TO THE CORRECTION AND FIRETIMES FILE**:
+    - *correction_file* -> YOUR_PATH_TO/HesaiLidar_ROS_2.0/src/driver/HesaiLidar_SDK_2.0/correction/angle_correction/OT128_Angle Correction File.csv
+    - *firetimes_file* -> YOUR_PATH_TO/HesaiLidar_ROS_2.0/src/driver/HesaiLidar_SDK_2.0/correction/firetime_correction/OT128_Firetime Correction File.csv
 - when testing could be helpful the following command `ros2 launch fast_limo fast_limo.launch.py rviz:=True` to launch fast limo alongside a preconfigured rviz2 instance
 - to run pcap file download the [Hesai ROS 2](https://github.com/leonardonels/HesaiLidar_ROS_2.0.git) driver and customize the config file like is shown below
 - the HESAI lidar is positioned ~0.9m above the center of mass (base_link)
