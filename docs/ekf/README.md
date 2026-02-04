@@ -25,7 +25,7 @@
    colcon build --packages-select mmr_ekf_odometry --symlink-install
    source install/setup.bash
    ```
-7. Download the bags to test it from [google-drive][https://drive.google.com/drive/folders/1XP3lOW1AS15QlEyR_MPKyaI0VNsc3VF8?hl=it]: rosbag2_2026_02_04-14_35_36 (bean circuit) and rosbag2_2026_02_04-15_45_27 (long circuit)
+7. Download the bags to test it from [google-drive](https://drive.google.com/drive/folders/1XP3lOW1AS15QlEyR_MPKyaI0VNsc3VF8?hl=it): rosbag2_2026_02_04-14_35_36 (bean circuit) and rosbag2_2026_02_04-15_45_27 (long circuit)
 
 8. Launch mmr_ekf_odometry and run one of the bags
    ```bash
