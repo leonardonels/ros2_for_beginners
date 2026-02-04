@@ -21,19 +21,27 @@
    git clone https://github.com/leonardonels/mmr_ekf_odometry.git
    ```
 5. Build mmr_ekf_odometry
+   ```bash
+   colcon build --packages-select mmr_ekf_odometry --symlink-install
+   source install/setup.bash
+   ```
+7. Download the bags to test it from [google-drive][https://drive.google.com/drive/folders/1XP3lOW1AS15QlEyR_MPKyaI0VNsc3VF8?hl=it]: rosbag2_2026_02_04-14_35_36 (bean circuit) and rosbag2_2026_02_04-15_45_27 (long circuit)
 
-6. Download the bag to test it from [google-drive](soon_tm) or [nextcloud.leonardonels](https://nextcloud.leonardonels.com/s/wPgrT9xLMYcKeWG)
-
+8. Launch mmr_ekf_odometry and run one of the bags
+   ```bash
+   ros2 launch mmr_ekf_odometry mmr_ekf_odometry.launch.py
+   ```
 ## notes:
-ignore any reference to gazebo or simulation files since they are ment for a gazebo simulator
+Ignore any reference to gazebo or simulation files since they are ment for a gazebo simulator
 
+*mmr_ekf_odometry.yaml*
 ```yml
 /mmr_ekf_odometry_node:
   ros__parameters:
     generic:
-      cones_topic: "/perception/colorblind_cones"
-      imu_topic: "/imu/data"
-      input_odom_topic: "/Odometry/fastLioOdom"
+      cones_topic: "/clusters"
+      imu_topic: "/synced/imu/data"
+      input_odom_topic: "/fast_limo/state"
       output_odom_topic: "/Odometry"
       gps_speed_topic: "/speed/gps"
       race_status_topic: "/planning/race_status"
@@ -49,4 +57,5 @@ ignore any reference to gazebo or simulation files since they are ment for a gaz
       proc_noise:  [1.0, 0.5]        # Sigma range [m] and bearing [rad]
       meas_noise:  [0.02, 0.02, 0.07]  # Gaussian error of the odometry X,Y position [m] and Yaw angle [rad]
       min_new_cone_distance: 2.0      # Minimum distance to create new cone
+      
 ```
